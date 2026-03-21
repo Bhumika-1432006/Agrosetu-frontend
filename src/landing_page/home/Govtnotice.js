@@ -73,7 +73,7 @@ function Govtnotice() {
       }
     }
     fetchNotices();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();

@@ -22,7 +22,7 @@ function Hero() {
       }
     }
     fetchNews();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const colors = {
     primary: "#4B6F44",
@@ -204,7 +204,7 @@ function Hero() {
             ))}
           </div>
         ) : (
-          <p>Loading...</p>
+          <p>{error || "Loading..."}</p>
         )}
 
         {/* MODAL */}

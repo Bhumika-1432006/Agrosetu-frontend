@@ -144,7 +144,7 @@ function Tips() {
         () => fetchWeather(12.97, 77.59)
       );
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getCropAdvice = () => {
     if (!weather) return { g: "...", n: "...", b: "..." };
@@ -157,8 +157,6 @@ function Tips() {
 
   return (
     <div style={{ backgroundColor: "#F8FAF9", minHeight: "100vh", fontFamily: "'Inter', sans-serif", color: colors.text }}>
-      
-      {/* --- BROAD TIP HERO SECTION (Full Breadth) --- */}
       <div style={{ 
         background: `linear-gradient(135deg, ${colors.forest} 0%, #2D5A41 100%)`, 
         color: "white", 
@@ -177,14 +175,11 @@ function Tips() {
             "{tip}"
           </h2>
         </div>
-        {/* Background Decorative Element */}
         <div style={{ position: "absolute", right: "-30px", bottom: "-40px", fontSize: "12rem", opacity: 0.05, transform: "rotate(-15deg)" }}>🌿</div>
         <div style={{ position: "absolute", left: "-30px", top: "-40px", fontSize: "12rem", opacity: 0.05, transform: "rotate(15deg)" }}>🌱</div>
       </div>
 
       <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "30px 20px" }}>
-        
-        {/* Header / Sub-Header */}
         <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "30px" }}>
           <div>
             <h1 style={{ fontSize: "1.8rem", fontWeight: "900", margin: 0, color: colors.forest, letterSpacing: "-0.5px" }}>Field Intelligence</h1>
@@ -196,10 +191,7 @@ function Tips() {
           </div>
         </header>
 
-        {/* Main Content Grid */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "30px" }}>
-          
-          {/* Weather Card */}
           <div style={{ background: colors.white, borderRadius: "32px", padding: "35px", boxShadow: "0 10px 40px rgba(0,0,0,0.03)", border: "1px solid #F0F0F0" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "30px", marginBottom: "35px" }}>
               <div style={{ fontSize: "4.5rem" }}>{weather?.temp > 25 ? "☀️" : "⛅"}</div>
@@ -208,7 +200,6 @@ function Tips() {
                 <p style={{ color: colors.textLight, margin: 0, fontWeight: "700", fontSize: "1.2rem" }}>{weather?.desc}</p>
               </div>
             </div>
-
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
               <WeatherBox label="Rain Risk" value={weather?.rain ?? "--"} icon="🌧️" bg="#E3F2FD" text="#1565C0" />
               <WeatherBox label="Humidity" value={`${weather?.hum ?? "--"}%`} icon="💧" bg="#E0F2F1" text="#00695C" />
@@ -217,18 +208,15 @@ function Tips() {
             </div>
           </div>
 
-          {/* Advice Card */}
           <div style={{ background: colors.white, borderRadius: "32px", padding: "35px", boxShadow: "0 10px 40px rgba(0,0,0,0.03)", border: "1px solid #F0F0F0" }}>
             <h3 style={{ fontSize: "1.2rem", fontWeight: "800", marginBottom: "25px", color: colors.forest }}>Agronomy Recommendation</h3>
             <AdviceRow label="High Potential" items={advice.g} color={colors.leaf} bg="#E8F9F1" icon="✅" />
             <AdviceRow label="Moderate Care" items={advice.n} color="#F39C12" bg="#FEF9E7" icon="⚠️" />
             <AdviceRow label="Avoid Planting" items={advice.b} color="#E74C3C" bg="#FDEDEC" icon="❌" />
-            
             <div style={{ marginTop: "30px", padding: "20px", borderRadius: "20px", backgroundColor: "#F8FAF9", border: "1px dashed #DDD", fontSize: "0.85rem", color: colors.textLight, lineHeight: "1.5" }}>
               <strong>Climate-Smart Tip:</strong> Temperatures below 22°C are ideal for cool-season vegetables. Ensure soil moisture is consistent during these periods.
             </div>
           </div>
-
         </div>
       </div>
     </div>
