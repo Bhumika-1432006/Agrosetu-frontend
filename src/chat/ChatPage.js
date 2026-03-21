@@ -8,21 +8,22 @@ function ChatPage() {
   const [text, setText] = useState("");
   const messagesEndRef = useRef(null);
 
-  // --- PREMIUM BRAND COLORS ---
   const colors = {
-    primary: "#4B6F44",      // Forest Green
-    gold: "#D4AF37",         // Harvest Gold
-    bgLight: "#F2F5F0",      // Sage White
-    chatBg: "#E5DDD5",       // Classic Chat Background
-    dealerBubble: "#DCF8C6", // Dealer Message Green
-    farmerBubble: "#FFFFFF", // Farmer Message White
-    textDark: "#1E291B"      // Deep Earth
+    primary: "#4B6F44", 
+    gold: "#D4AF37", 
+    bgLight: "#F2F5F0", 
+    chatBg: "#E5DDD5", 
+    dealerBubble: "#DCF8C6", 
+    farmerBubble: "#FFFFFF", 
+    textDark: "#1E291B",
+    white: "#FFFFFF"
   };
 
   const fetchChat = async () => {
     if (!state?.chatId) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/chat/${state.chatId}`);
+      // UPDATED TO USE ENV VARIABLE
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}`);
       if (!res.ok) throw new Error("Failed to fetch chat");
       const data = await res.json();
       setChat(data);
@@ -45,8 +46,9 @@ function ChatPage() {
   const sendMessage = async () => {
     if (!text.trim()) return;
     try {
+      // UPDATED TO USE ENV VARIABLE
       const res = await fetch(
-        `http://localhost:5000/api/chat/${state.chatId}/message`,
+        `${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}/message`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -81,7 +83,6 @@ function ChatPage() {
         height: "85vh"
       }}>
         
-        {/* CHAT HEADER */}
         <div style={{ 
           backgroundColor: colors.primary, 
           padding: "15px 20px", 
@@ -105,7 +106,6 @@ function ChatPage() {
           </div>
         </div>
 
-        {/* MESSAGES AREA */}
         <div style={{ 
           flex: 1, 
           overflowY: "auto", 
@@ -156,7 +156,6 @@ function ChatPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* INPUT AREA */}
         <div style={{ padding: "15px", backgroundColor: "white", borderTop: "1px solid #eee" }}>
           <div className="d-flex align-items-center bg-light px-3 py-1" style={{ borderRadius: "30px" }}>
             <input

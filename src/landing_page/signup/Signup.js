@@ -70,7 +70,8 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = isSignup ? "http://localhost:5000/api/signup" : "http://localhost:5000/api/signin";
+    // UPDATED TO USE ENV VARIABLE
+    const url = isSignup ? `${process.env.REACT_APP_API_URL}/api/signup` : `${process.env.REACT_APP_API_URL}/api/signin`;
     let bodyData = isSignup
       ? { name: formData.name, email: formData.email, password: formData.password, role }
       : { email: formData.email, password: formData.password };
@@ -119,7 +120,7 @@ function Signup() {
       <div style={{
           maxWidth: "900px",
           width: "100%",
-          height: "600px", // Fixed height for a consistent full-length look
+          height: "600px", 
           borderRadius: "30px",
           backgroundColor: "#FFFFFF",
           display: "flex",
@@ -127,11 +128,10 @@ function Signup() {
           boxShadow: "0 15px 50px rgba(0,0,0,0.1)"
         }}>
         
-        {/* LEFT PANEL: FORM */}
         <div style={{ 
           flex: 1, 
           padding: "50px 60px", 
-          overflowY: "auto", // Allows form scrolling if it gets long
+          overflowY: "auto", 
           display: "flex", 
           flexDirection: "column", 
           justifyContent: "center" 
@@ -202,7 +202,6 @@ function Signup() {
           {message && <div style={{ marginTop: "15px", textAlign: "center", fontWeight: "600", color: colors.primary }}>{message}</div>}
         </div>
 
-        {/* RIGHT PANEL: FULL LENGTH BRANDING */}
         <div style={{ 
           flex: 0.8, 
           backgroundColor: colors.sidePanel, 
@@ -211,7 +210,7 @@ function Signup() {
           alignItems: "center", 
           justifyContent: "center",
           padding: "40px",
-          height: "100%" // Ensures it matches the left panel exactly
+          height: "100%" 
         }}>
           <div style={{ 
             width: "100%", 

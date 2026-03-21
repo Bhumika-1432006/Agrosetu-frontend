@@ -17,20 +17,18 @@ function AuctionPage() {
     winnerBg: "rgba(212, 175, 55, 0.08)"
   };
 
-  // Clock for countdown display
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // --- 🔄 EXISTING LOGIC: Fetch Data (UNTOUCHED FUNCTIONALITY) ---
   const fetchAuctionData = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/bid/bids/${cropId}`);
+      // UPDATED TO USE ENV VARIABLE
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/bid/bids/${cropId}`);
       const data = await res.json();
       if (data?.crop) {
         setCrop(data.crop);
-        // Added safety check (|| []) so it doesn't crash if bids is undefined
         const sorted = (data.bids || []).sort((a, b) => b.pricePerKg - a.pricePerKg);
         setBids(sorted);
       }
@@ -40,7 +38,7 @@ function AuctionPage() {
   };
 
   useEffect(() => {
-    let isMounted = true; // 🛡️ Flag to prevent crash when navigating away
+    let isMounted = true; 
 
     const initFetch = async () => {
       await fetchAuctionData();
@@ -54,12 +52,11 @@ function AuctionPage() {
     }, 3000); 
 
     return () => {
-      isMounted = false; // 🛑 Stops background task when you click 'About'
+      isMounted = false; 
       clearInterval(interval);
     };
   }, [cropId]);
 
-  // Styling helper for countdown
   const getCountdown = (endTime) => {
     if (!endTime) return "PENDING";
     const diff = new Date(endTime) - now;
@@ -77,11 +74,10 @@ function AuctionPage() {
 
   return (
     <div style={{ backgroundColor: colors.bgLight, minHeight: "100vh", paddingBottom: "60px" }}>
-      
-      {/* 📸 TOP CROP IMAGE HEADER */}
       <div style={{ position: "relative", height: "350px", width: "100%", overflow: "hidden" }}>
         <img 
-          src={`http://localhost:5000${crop.imageUrl}`} 
+          // UPDATED TO USE ENV VARIABLE
+          src={`${process.env.REACT_APP_API_URL}${crop.imageUrl}`} 
           alt={crop.cropName} 
           style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.6)" }} 
         />
@@ -97,8 +93,6 @@ function AuctionPage() {
       </div>
 
       <div className="container" style={{ maxWidth: "1000px", marginTop: "-50px" }}>
-        
-        {/* Statistics Overview Card */}
         <div className="card border-0 shadow-lg mb-5" style={{ borderRadius: "25px", background: colors.white }}>
           <div className="row g-0 text-center py-4">
             <div className="col-4 border-end">
@@ -113,7 +107,6 @@ function AuctionPage() {
             </div>
             <div className="col-4">
                 <small className="text-muted text-uppercase fw-bold" style={{ fontSize: "0.7rem" }}>Highest Bid</small>
-                {/* 🛡️ Added Safety Checks for bids[0] */}
                 <h4 className="fw-bold m-0 text-success">
                     ₹{bids?.length > 0 ? bids[0]?.pricePerKg : crop?.price}
                 </h4>
@@ -121,7 +114,6 @@ function AuctionPage() {
           </div>
         </div>
 
-        {/* Leaderboard Table */}
         <div className="d-flex justify-content-between align-items-center mb-4 px-2">
           <h3 className="fw-bold m-0" style={{ color: colors.textDark }}>Live Leaderboard</h3>
           <div className="d-flex align-items-center">
@@ -141,7 +133,6 @@ function AuctionPage() {
               </tr>
             </thead>
             <tbody>
-              {/* 🛡️ Added safety fallback (bids || []) */}
               {(bids || []).map((bid, index) => (
                 <tr key={index} style={{ 
                     backgroundColor: index === 0 ? colors.winnerBg : "transparent",
