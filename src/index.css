@@ -11,3 +11,157 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* --- GLOBAL APP DEFAULTS --- */
+:root {
+  --primary-green: #0f9b4d;
+  --bg-light: #f8f9fa;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  /* Prevents the annoying horizontal scroll on mobile */
+  overflow-x: hidden; 
+  background-color: var(--bg-light);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Make all images responsive by default */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Better touch targets for mobile (Minimum 44px height) */
+button, .btn, .nav-link {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Force cards to have rounded corners like modern apps */
+.card {
+  border: none !important;
+  border-radius: 15px !important;
+  overflow: hidden;
+}
+
+/* Utility for mobile padding */
+@media (max-width: 576px) {
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .section-padding {
+    padding: 40px 0;
+  }
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+/* --- GLOBAL MOBILE FIXES (NO LOGIC CHANGED) --- */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  /* Fixes horizontal scrolling/shaking on mobile */
+  overflow-x: hidden; 
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Force Containers to be responsive */
+.container {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+}
+
+/* Force Cards to stack on small screens */
+@media (max-width: 768px) {
+  .row {
+    display: flex;
+    flex-direction: column;
+    margin: 0 !important;
+  }
+  
+  .col-lg-4, .col-md-6, .col-sm-12 {
+    width: 100% !important;
+    margin-bottom: 20px !important;
+    padding: 0 !important;
+  }
+
+  /* Make images fit the card width perfectly */
+  .card-img-top {
+    height: 200px !important;
+    object-fit: cover;
+  }
+
+  /* Make buttons easier to tap with a thumb */
+  .btn {
+    width: 100% !important;
+    padding: 12px !important;
+    font-size: 1.1rem !important;
+  }
+
+  /* Responsive Typography */
+  h1 { font-size: 1.8rem !important; }
+  h2 { font-size: 1.5rem !important; }
+}/* Fix Chat Page spacing without touching JS */
+@media (max-width: 600px) {
+  div[style*="padding: 20px"] {
+    padding: 10px !important; /* Reduces outer gap on small screens */
+  }
+
+  div[style*="height: 85vh"] {
+    height: 92vh !important; /* Uses more screen space on mobile */
+    border-radius: 0 !important; /* Removes rounded corners for full-app look */
+  }
+}
+
+/* --- SIGNUP & LOGIN MOBILE POLISH (NO LOGIC CHANGED) --- */
+
+@media (max-width: 576px) {
+  /* Make form inputs and labels easier to read/tap */
+  .form-control {
+    height: 50px !important; /* Larger touch area for fingers */
+    font-size: 16px !important; /* Prevents iOS from auto-zooming on focus */
+    border-radius: 12px !important;
+    margin-bottom: 15px !important;
+  }
+
+  /* Make the "Submit" or "Login" buttons stand out */
+  .btn-primary, .btn-success {
+    height: 55px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* Center the form titles and reduce top margin for mobile */
+  h2.text-center, h3.text-center {
+    margin-top: 20px !important;
+    margin-bottom: 30px !important;
+  }
+
+  /* If you have a "Card" wrapping your form, make it full-width */
+  .auth-card, .login-card {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+}
