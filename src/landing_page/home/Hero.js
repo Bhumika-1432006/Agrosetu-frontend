@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 function Hero() {
   const [news, setNews] = useState([]);
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
   const [selectedArticle, setSelectedArticle] = useState(null);
 
   useEffect(() => {

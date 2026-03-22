@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 function Govtnotice() {
   const [notices, setNotices] = useState([]);
   const [filteredNotices, setFilteredNotices] = useState([]);
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
   const [selectedNotice, setSelectedNotice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
