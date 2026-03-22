@@ -37,7 +37,7 @@ function ChatPage() {
     fetchChat();
     const interval = setInterval(fetchChat, 2000);
     return () => clearInterval(interval);
-  }, [state?.chatId]);
+  }, [state?.chatId]); 
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

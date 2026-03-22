@@ -5,11 +5,11 @@ function MyCrops() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const farmerId = localStorage.getItem("userId"); // logged-in farmer
+  const farmerId = localStorage.getItem("userId"); 
+  const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
-  // --- THEME COLORS ---
   const colors = {
-    primary: "#7A9461",   // Soft Sage Green
+    primary: "#7A9461",
     gold: "#D4AF37",      
     textDark: "#4A4A4A",
     bgLight: "#F9FAF8",
@@ -20,7 +20,9 @@ function MyCrops() {
   useEffect(() => {
     const fetchCrops = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/farmer/crops/${farmerId}`);
+        setLoading(true);
+        // UPDATED: Using API_BASE_URL instead of hardcoded localhost
+        const res = await fetch(`${API_BASE_URL}/api/farmer/crops/${farmerId}`);
         if (!res.ok) throw new Error("Failed to fetch your crops");
         const data = await res.json();
         setCrops(data);
@@ -31,8 +33,10 @@ function MyCrops() {
       }
     };
 
-    fetchCrops();
-  }, [farmerId]);
+    if (farmerId) {
+      fetchCrops();
+    }
+  }, [farmerId, API_BASE_URL]);
 
   if (loading) return (
     <div className="text-center mt-5" style={{ color: colors.primary }}>
@@ -50,7 +54,6 @@ function MyCrops() {
   return (
     <div style={{ backgroundColor: colors.bgLight, minHeight: "100vh", padding: "40px 20px" }}>
       <div className="container">
-        {/* HEADER SECTION */}
         <div className="mb-5">
           <h2 style={{ color: colors.textDark, fontWeight: "800", marginBottom: "10px" }}>
             My Uploaded Crops
@@ -76,7 +79,8 @@ function MyCrops() {
                 }}>
                   {crop.imageUrl && (
                     <img
-                      src={`http://localhost:5000${crop.imageUrl}`}
+                      // UPDATED: Using API_BASE_URL for the image source
+                      src={`${API_BASE_URL}${crop.imageUrl}`}
                       alt={crop.cropName}
                       style={{ height: "220px", objectFit: "cover" }}
                     />
