@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import io from "socket.io-client";
 
-// Connect once outside to avoid multiple connections on re-render
-const socket = io("http://localhost:5000");
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const socket = io(API_BASE_URL);
 
 function DealerBiddingRoom() {
   const { cropId } = useParams();
@@ -18,10 +18,9 @@ function DealerBiddingRoom() {
   };
 
   useEffect(() => {
-    // 1. Initial Fetch
     const fetchCropBids = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/bid/bids/${cropId}`);
+        const res = await fetch(`${API_BASE_URL}/api/bid/bids/${cropId}`);
         const data = await res.json();
         if (data?.crop) {
           setCrop(data.crop);
@@ -33,10 +32,7 @@ function DealerBiddingRoom() {
     };
     fetchCropBids();
 
-    // 2. Real-time Setup: Join the specific room
     socket.emit("joinAuction", cropId);
-
-    // 3. Listen for updates from the room
     socket.on("bidUpdated", (update) => {
       if (update.cropId === cropId) {
         const sorted = (update.bids || []).sort((a, b) => b.pricePerKg - a.pricePerKg);
@@ -45,7 +41,6 @@ function DealerBiddingRoom() {
       }
     });
 
-    // 4. Cleanup on unmount
     return () => {
       socket.emit("leaveAuction", cropId);
       socket.off("bidUpdated");
@@ -57,14 +52,12 @@ function DealerBiddingRoom() {
   const submitBid = async () => {
     if (!crop) return;
     const bidAmount = Number(newBid);
-
-    // Validation: Must be higher than current highest bid
     if (!bidAmount || bidAmount <= highestBid) {
       return alert(`Bid must be higher than current highest price (₹${highestBid})`);
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/api/bid/bid/${cropId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/bid/bid/${cropId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -73,9 +66,7 @@ function DealerBiddingRoom() {
           pricePerKg: bidAmount 
         }),
       });
-      if (res.ok) {
-        setNewBid(""); // Clear input, wait for socket to update list
-      }
+      if (res.ok) setNewBid("");
     } catch (err) { alert("Error submitting bid"); }
   };
 
@@ -95,7 +86,6 @@ function DealerBiddingRoom() {
               <p>Qty: <strong>{crop.quantity} kg</strong> | Base: <strong>₹{crop.price}/kg</strong></p>
             </div>
           </div>
-
           <div className="col-lg-5">
             <div style={{ background: `linear-gradient(135deg, ${colors.primary} 0%, #2D4429 100%)`, color: "white", padding: "35px", borderRadius: "30px", textAlign: "center" }}>
               <small className="text-uppercase opacity-75">Current High Bid</small>
@@ -104,7 +94,6 @@ function DealerBiddingRoom() {
             </div>
           </div>
         </div>
-
         {crop.status === "open" && (
           <div className="mb-5 p-4 bg-white shadow-sm" style={{ borderRadius: "25px", border: `2px solid ${colors.gold}` }}>
             <div className="row g-3 align-items-center">
@@ -118,7 +107,6 @@ function DealerBiddingRoom() {
             </div>
           </div>
         )}
-
         <h5 className="mb-4 fw-bold">Live Leaderboard</h5>
         <div className="table-responsive bg-white shadow-sm" style={{ borderRadius: "30px" }}>
           <table className="table mb-0">
