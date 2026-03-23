@@ -48,7 +48,7 @@ function FarmerCrops() {
   useEffect(() => {
     const fetchCrops = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/farmer/crops/${farmerId}`);
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/farmer/crops/${farmerId}`);
         const data = await res.json();
         setCrops(data || []);
       } catch (err) {
@@ -86,7 +86,7 @@ function FarmerCrops() {
     data.append("image", formData.image);
 
     try {
-      const res = await fetch("http://localhost:5000/api/farmer/crops", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/farmer/crops`, {
         method: "POST",
         body: data,
       });
@@ -199,7 +199,13 @@ function FarmerCrops() {
             <div key={crop._id} className="col-md-4">
               <div className="card h-100 border-0 shadow-sm" style={{ borderRadius: "24px", overflow: "hidden" }}>
                 <div style={{ position: "relative" }}>
-                  <img src={`http://localhost:5000${crop.imageUrl}`} className="card-img-top" alt={crop.cropName} style={{ height: "200px", objectFit: "cover" }} />
+                 // Line 166 (Inside the crops.map)
+<img 
+  src={`${process.env.REACT_APP_API_URL}${crop.imageUrl}`} 
+  className="card-img-top" 
+  alt={crop.cropName} 
+  style={{ height: "200px", objectFit: "cover" }} 
+/>
                   <span style={{ 
                     position: "absolute", top: "15px", right: "15px", 
                     backgroundColor: crop.status === "open" ? "#E8F5E9" : "#FFF8E1",

@@ -18,12 +18,12 @@ function DealerCrops() {
   };
 
   // Initialize Socket.IO connection (LOGIC UNTOUCHED)
-  const socket = io("http://localhost:5000");
+ const socket = io(process.env.REACT_APP_API_URL);
 
   useEffect(() => {
     const fetchCrops = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/dealer/crops");
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/dealer/crops`);
         if (!res.ok) throw new Error("Failed to fetch crops");
         const data = await res.json();
         setCrops(data);
