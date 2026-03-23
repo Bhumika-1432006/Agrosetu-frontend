@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 function Hero() {
-  const [news, setNews] = useState([]);
-  const [error, setError] = useState("");
-  const [selectedArticle, setSelectedArticle] = useState(null);
+ const [news, setNews] = useState([]);
+const [error, setError] = useState("");
+const [selectedArticle, setSelectedArticle] = useState(null);
 
   useEffect(() => {
     const API_KEY = "ad6289a097f94ee8a75aeaecfb244ed5";
