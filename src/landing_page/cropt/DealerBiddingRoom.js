@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import io from "socket.io-client";
 
+// Change this line:
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 const socket = io(API_BASE_URL);
 
