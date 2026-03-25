@@ -116,13 +116,12 @@ function FarmerCrops() {
     }));
   };
 
- const submitBidTime = async (cropId) => {
+const submitBidTime = async (cropId) => {
     const times = bidTimes[cropId];
     if (!times?.startTime || !times?.endTime) {
       return alert("Select both start and end time");
     }
 
-    // Use the Render URL from your .env file
     const API_URL = process.env.REACT_APP_API_URL || "https://agrosetu-backend.onrender.com";
 
     try {
@@ -133,32 +132,29 @@ function FarmerCrops() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             farmerId,
-            startTime: times.startTime,
-            endTime: times.endTime,
+            // FIX: Convert local browser time to ISO string 
+            // This ensures the Render server (UTC) and your browser (IST) match.
+            startTime: new Date(times.startTime).toISOString(),
+            endTime: new Date(times.endTime).toISOString(),
           }),
         }
       );
+      
       const data = await res.json();
+      
       if (res.ok) {
-        alert("Bid time set");
+        alert(data.message); // Will show "Auction is now LIVE!" or "Auction Scheduled"
         setCrops((prev) =>
           prev.map((c) =>
-            c._id === cropId
-              ? {
-                  ...c,
-                  bidStartTime: times.startTime,
-                  bidEndTime: times.endTime,
-                  status: "open",
-                }
-              : c,
-          ),
+            c._id === cropId ? { ...c, ...data.crop } : c
+          )
         );
       } else {
         alert(data.message);
       }
     } catch (err) {
       console.error(err);
-      alert("Server error");
+      alert("Server error updating auction time");
     }
   };
 
