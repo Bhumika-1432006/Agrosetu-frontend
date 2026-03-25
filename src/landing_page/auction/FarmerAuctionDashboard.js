@@ -6,7 +6,7 @@ function FarmerAuctionDashboard() {
   const farmerId = localStorage.getItem("userId");
   const [myCrops, setMyCrops] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedTime, setSelectedTime] = useState({}); // Stores time for each cropId
+  const [selectedTime, setSelectedTime] = useState({});
 
   const colors = {
     primary: "#4B6F44",
@@ -14,10 +14,11 @@ function FarmerAuctionDashboard() {
     bgLight: "#F4F7F2",
   };
 
+  const API_BASE_URL = process.env.REACT_APP_API_URL || "https://agrosetu-backend.onrender.com";
+
   const fetchMyCrops = async () => {
     try {
-      // Use process.env for the live Render URL
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/farmer/crops/${farmerId}`);
+      const res = await fetch(`${API_BASE_URL}/api/farmer/crops/${farmerId}`);
       const data = await res.json();
       setMyCrops(data || []);
       setLoading(false);
@@ -36,20 +37,24 @@ function FarmerAuctionDashboard() {
     if (!timeValue) return alert("Please select a time first!");
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/bid/update-time/${cropId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/bid/update-time/${cropId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bidEndTime: timeValue }) // Must match backend key!
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({ bidEndTime: timeValue })
       });
 
       if (res.ok) {
         alert("Auction schedule updated!");
-        fetchMyCrops(); // Refresh the list
+        fetchMyCrops(); 
       } else {
         alert("Server Error: Could not update time.");
       }
     } catch (err) {
       console.error("Update error:", err);
+      alert("Connection failed. Check if backend is awake!");
     }
   };
 
@@ -63,12 +68,11 @@ function FarmerAuctionDashboard() {
           {myCrops.map((crop) => (
             <div key={crop._id} className="col-md-4">
               <div className="card h-100 border-0 shadow-sm" style={{ borderRadius: "20px" }}>
-                <img src={`${process.env.REACT_APP_API_URL}${crop.imageUrl}`} className="card-img-top" style={{ height: "200px", objectFit: "cover", borderRadius: "20px 20px 0 0" }} alt={crop.cropName} />
+                <img src={`${API_BASE_URL}${crop.imageUrl}`} className="card-img-top" style={{ height: "200px", objectFit: "cover", borderRadius: "20px 20px 0 0" }} alt={crop.cropName} />
                 <div className="card-body">
                   <h5 className="fw-bold">{crop.cropName}</h5>
                   <p className="text-muted small">Status: <span className="badge bg-success">{crop.status}</span></p>
                   
-                  {/* Time Input Field */}
                   <div className="mb-3">
                     <label className="small fw-bold">Set Auction End Time:</label>
                     <input 
