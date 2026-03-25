@@ -130,13 +130,12 @@ const submitBidTime = async (cropId) => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            farmerId,
-            // FIX: Convert local browser time to ISO string 
-            // This ensures the Render server (UTC) and your browser (IST) match.
-            startTime: new Date(times.startTime).toISOString(),
-            endTime: new Date(times.endTime).toISOString(),
-          }),
+        // Inside submitBidTime function
+body: JSON.stringify({
+  farmerId,
+  startTime: new Date(times.startTime).toISOString(), // CHANGE THIS LINE
+  endTime: new Date(times.endTime).toISOString(),     // CHANGE THIS LINE
+}),
         }
       );
       
@@ -479,7 +478,7 @@ const submitBidTime = async (cropId) => {
                     Update Schedule
                   </button>
 
-                  {crop.status === "open" && (
+                 {crop.bidStartTime && (
                     <div
                       className="mt-4 p-3 text-center"
                       style={{
@@ -489,11 +488,16 @@ const submitBidTime = async (cropId) => {
                         color: colors.primary,
                       }}
                     >
-                      <strong>Active:</strong>{" "}
-                      {new Date(crop.bidStartTime).toLocaleString("en-IN", {
-                        dateStyle: "short",
-                        timeStyle: "short",
-                      })}
+                    
+<strong>Active:</strong>{" "}
+{new Date(crop.bidStartTime).toLocaleString("en-IN", {
+  hour: '2-digit',
+  minute: '2-digit',
+  day: '2-digit',
+  month: '2-digit',
+  year: '2-digit',
+  hour12: true
+})}
                     </div>
                   )}
                 </div>
