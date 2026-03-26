@@ -25,7 +25,7 @@ function DealerBidPage() {
       const updatedData = {};
       await Promise.all(storedCart.map(async (item) => {
         try {
-          const res = await fetch(`http://localhost:5000/api/bid/bids/${item._id}`);
+          const res = await fetch(`https://agrosetu-backend.onrender.com/api/auction/bids/${item._id}`);
           const data = await res.json();
           if (data.crop) updatedData[item._id] = { ...data.crop, bids: data.bids };
         } catch (err) { console.error("Fetch error:", err); }
@@ -52,7 +52,7 @@ function DealerBidPage() {
     if (amount <= highest) return alert(`Bid must be higher than ₹${highest}`);
 
     try {
-      const res = await fetch(`http://localhost:5000/api/bid/bid/${cropId}`, {
+      const res = await fetch(`https://agrosetu-backend.onrender.com/api/auction/bid/${cropId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dealerId, dealerName, pricePerKg: amount }),
