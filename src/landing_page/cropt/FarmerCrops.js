@@ -116,37 +116,33 @@ function FarmerCrops() {
     }));
   };
 
-const submitBidTime = async (cropId) => {
+  const submitBidTime = async (cropId) => {
     const times = bidTimes[cropId];
     if (!times?.startTime || !times?.endTime) {
       return alert("Select both start and end time");
     }
 
-    const API_URL = process.env.REACT_APP_API_URL || "https://agrosetu-backend.onrender.com";
+    const API_URL =
+      process.env.REACT_APP_API_URL || "https://agrosetu-backend.onrender.com";
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/auction/${cropId}/set-bid-time`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+      const res = await fetch(`${API_URL}/api/auction/${cropId}/set-bid-time`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         // Inside submitBidTime function
-body: JSON.stringify({
-  farmerId,
-  startTime: new Date(times.startTime).toISOString(), // CHANGE THIS LINE
-  endTime: new Date(times.endTime).toISOString(),     // CHANGE THIS LINE
-}),
-        }
-      );
-      
+        body: JSON.stringify({
+          farmerId,
+          startTime: new Date(times.startTime).toISOString(), // CHANGE THIS LINE
+          endTime: new Date(times.endTime).toISOString(), // CHANGE THIS LINE
+        }),
+      });
+
       const data = await res.json();
-      
+
       if (res.ok) {
         alert(data.message); // Will show "Auction is now LIVE!" or "Auction Scheduled"
         setCrops((prev) =>
-          prev.map((c) =>
-            c._id === cropId ? { ...c, ...data.crop } : c
-          )
+          prev.map((c) => (c._id === cropId ? { ...c, ...data.crop } : c)),
         );
       } else {
         alert(data.message);
@@ -338,7 +334,11 @@ body: JSON.stringify({
                 <div style={{ position: "relative" }}>
                   // Line 166 (Inside the crops.map)
                   <img
-                   src={`${process.env.REACT_APP_API_URL}/${crop.imageUrl.replace(/\\/g, '/')}`}
+                    src={
+                      crop.imageUrl.startsWith("http")
+                        ? crop.imageUrl
+                        : `${process.env.REACT_APP_API_URL}/${crop.imageUrl.replace(/\\/g, "/")}`
+                    }
                     className="card-img-top"
                     alt={crop.cropName}
                     style={{ height: "200px", objectFit: "cover" }}
@@ -478,7 +478,7 @@ body: JSON.stringify({
                     Update Schedule
                   </button>
 
-                 {crop.bidStartTime && (
+                  {crop.bidStartTime && (
                     <div
                       className="mt-4 p-3 text-center"
                       style={{
@@ -488,16 +488,15 @@ body: JSON.stringify({
                         color: colors.primary,
                       }}
                     >
-                    
-<strong>Active:</strong>{" "}
-{new Date(crop.bidStartTime).toLocaleString("en-IN", {
-  hour: '2-digit',
-  minute: '2-digit',
-  day: '2-digit',
-  month: '2-digit',
-  year: '2-digit',
-  hour12: true
-})}
+                      <strong>Active:</strong>{" "}
+                      {new Date(crop.bidStartTime).toLocaleString("en-IN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "2-digit",
+                        hour12: true,
+                      })}
                     </div>
                   )}
                 </div>
