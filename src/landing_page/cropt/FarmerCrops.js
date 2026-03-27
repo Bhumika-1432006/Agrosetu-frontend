@@ -122,20 +122,22 @@ function FarmerCrops() {
       return alert("Select both start and end time");
     }
 
-    const API_URL =
-      process.env.REACT_APP_API_URL || "https://agrosetu-backend.onrender.com";
+    // Use the Render URL from your .env file
+    const API_URL = process.env.REACT_APP_API_URL || "https://agrosetu-backend.onrender.com";
 
     try {
-      const res = await fetch(`${API_URL}/api/auction/${cropId}/set-bid-time`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        // Inside submitBidTime function
-        body: JSON.stringify({
-          farmerId,
-          startTime: new Date(times.startTime).toISOString(), // CHANGE THIS LINE
-          endTime: new Date(times.endTime).toISOString(), // CHANGE THIS LINE
-        }),
-      });
+      const res = await fetch(
+        `${API_URL}/api/auction/${cropId}/set-bid-time`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            farmerId,
+            startTime: times.startTime,
+            endTime: times.endTime,
+          }),
+        }
+      );
 
       const data = await res.json();
 
