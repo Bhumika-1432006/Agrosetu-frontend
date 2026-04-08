@@ -334,7 +334,7 @@ function FarmerCrops() {
                 style={{ borderRadius: "24px", overflow: "hidden" }}
               >
                 <div style={{ position: "relative" }}>
-                  // Line 166 (Inside the crops.map)
+                 
                   <img
   src={
     crop.imageUrl && crop.imageUrl.startsWith("http")
