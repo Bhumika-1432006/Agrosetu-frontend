@@ -18,7 +18,9 @@ function DealerCrops() {
   };
 
   // Sanitizing the URL to prevent double slashes
-  const API_BASE_URL = (process.env.REACT_APP_API_URL || "http://localhost:5000").replace(/\/$/, "");
+  const API_BASE_URL = (
+    process.env.REACT_APP_API_URL || "http://localhost:5000"
+  ).replace(/\/$/, "");
 
   useEffect(() => {
     // Socket moved inside to prevent infinite re-render loops
@@ -129,8 +131,8 @@ function DealerCrops() {
         <div className="row g-4">
           {crops.map((crop) => {
             // Logic to ensure the image URL is constructed correctly
-            const imagePath = crop.imageUrl 
-              ? `${API_BASE_URL}${crop.imageUrl.startsWith('/') ? '' : '/'}${crop.imageUrl}`
+            const imagePath = crop.imageUrl
+              ? `${API_BASE_URL}${crop.imageUrl.startsWith("/") ? "" : "/"}${crop.imageUrl}`
               : null;
 
             return (
@@ -155,18 +157,19 @@ function DealerCrops() {
                   <div style={{ position: "relative", overflow: "hidden" }}>
                     {crop.imageUrl ? (
                       <img
-  src={crop.imageUrl} // Cloudinary provides the full URL starting with https://
-  alt={crop.cropName}
-  style={{
-    height: "300px",
-    width: "100%",
-    objectFit: "cover",
-  }}
-  onError={(e) => {
-    e.target.onerror = null;
-    e.target.src = "https://via.placeholder.com/300?text=Image+Not+Found";
-  }}
-/>
+                        src={crop.imageUrl} // Cloudinary provides the full URL starting with https://
+                        alt={crop.cropName}
+                        style={{
+                          height: "300px",
+                          width: "100%",
+                          objectFit: "cover",
+                        }}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            "https://via.placeholder.com/300?text=Image+Not+Found";
+                        }}
+                      />
                     ) : (
                       <div
                         style={{
