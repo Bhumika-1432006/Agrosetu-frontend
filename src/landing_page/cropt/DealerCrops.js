@@ -20,28 +20,24 @@ function DealerCrops() {
   // Initialize Socket.IO connection (LOGIC UNTOUCHED)
   const socket = io(process.env.REACT_APP_API_URL);
 
-useEffect(() => {
-    // ✅ FIX 1: Initialize socket INSIDE useEffect
-    const socket = io(API_URL);
+  useEffect(() => {
+    const fetchCrops = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/dealer/crops`,
+        );
+        if (!res.ok) throw new Error("Failed to fetch crops");
+        const data = await res.json();
+        setCrops(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-    const fetchCrops = async () => {
-      try {
-        const res = await fetch(`${API_URL}/api/dealer/crops`);
-        if (!res.ok) throw new Error("Failed to fetch crops");
-        const data = await res.json();
-        setCrops(data);
-      } catch (err) {
-        console.error("Fetch error:", err);
-      }
-    };
+    fetchCrops();
 
-    fetchCrops();
-
-    // ✅ FIX 2: Proper cleanup to close the connection when leaving the page
-    return () => {
-      socket.disconnect();
-    };
-  }, [API_URL]);
+    return () => socket.disconnect();
+  }, []);
 
   // Add crop to cart (LOGIC UNTOUCHED)
   const addToCart = (crop) => {
@@ -62,23 +58,27 @@ useEffect(() => {
   // Start chat with farmer (LOGIC UNTOUCHED)
   const startChat = async (crop) => {
     try {
-      
-
       const farmerId = crop.farmerId._id || crop.farmerId;
-      // ✅ FIX 3: Use API_URL instead of hardcoded localhost
-      const res = await fetch(`${API_URL}/api/chat/start`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dealerId, farmerId, cropId: crop._id }),
-      });
-      if (!res.ok) throw new Error("Failed to start chat");
-      const chat = await res.json();
-      navigate("/chat", { state: { chatId: chat._id } });
-    } catch (err) {
-      console.error(err);
-      alert("Failed to start chat");
-    }
-  };
+
+      const res = await fetch("http://localhost:5000/api/chat/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dealerId,
+          farmerId,
+          cropId: crop._id,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to start chat");
+
+      const chat = await res.json();
+      navigate("/chat", { state: { chatId: chat._id } });
+    } catch (err) {
+      console.error(err);
+      alert("Failed to start chat");
+    }
+  };
 
   return (
     <div
