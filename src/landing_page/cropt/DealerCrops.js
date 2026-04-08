@@ -155,18 +155,18 @@ function DealerCrops() {
                   <div style={{ position: "relative", overflow: "hidden" }}>
                     {crop.imageUrl ? (
                       <img
-                        src={imagePath}
-                        alt={crop.cropName}
-                        style={{
-                          height: "300px",
-                          width: "100%",
-                          objectFit: "cover",
-                        }}
-                        onError={(e) => {
-                          e.target.onerror = null; 
-                          e.target.src = "https://via.placeholder.com/300?text=Image+Load+Error";
-                        }}
-                      />
+  src={crop.imageUrl} // Cloudinary provides the full URL starting with https://
+  alt={crop.cropName}
+  style={{
+    height: "300px",
+    width: "100%",
+    objectFit: "cover",
+  }}
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src = "https://via.placeholder.com/300?text=Image+Not+Found";
+  }}
+/>
                     ) : (
                       <div
                         style={{
