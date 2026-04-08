@@ -149,14 +149,22 @@ function DealerCrops() {
                   {crop.imageUrl ? (
                     // Line 104 (Inside the crops.map)
                     <img
-                      src={`${process.env.REACT_APP_API_URL}${crop.imageUrl}`}
-                      alt={crop.cropName}
-                      style={{
-                        height: "300px",
-                        width: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
+  src={
+    crop.imageUrl && crop.imageUrl.startsWith("http")
+      ? crop.imageUrl // ✅ Use Cloudinary URL directly
+      : `${process.env.REACT_APP_API_URL || "http://localhost:5000"}/${crop.imageUrl?.replace(/\\/g, "/")}` // Fallback for local
+  }
+  alt={crop.cropName}
+  style={{
+    height: "300px",
+    width: "100%",
+    objectFit: "cover",
+  }}
+  onError={(e) => {
+    // Fallback if the image link is broken
+    e.target.src = "https://via.placeholder.com/400x300?text=Image+Not+Found";
+  }}
+/>
                   ) : (
                     <div
                       style={{
