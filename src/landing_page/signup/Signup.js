@@ -72,7 +72,9 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // UPDATED TO USE ENV VARIABLE
-    const url = isSignup ? `${process.env.REACT_APP_API_URL}/api/signup` : `${process.env.REACT_APP_API_URL}/api/signin`;
+   const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+  const endpoint = isSignup ? "/api/signup" : "/api/signin";
+  const url = `${baseUrl}${endpoint}`;
     let bodyData = isSignup
       ? { name: formData.name, email: formData.email, password: formData.password, role }
       : { email: formData.email, password: formData.password };

@@ -10,8 +10,9 @@ function DealerBidPage() {
   const [cropsData, setCropsData] = useState({});
   const [bidAmounts, setBidAmounts] = useState({});
   const [now, setNow] = useState(new Date());
-
-  useEffect(() => {
+const API_BASE = "https://agrosetu-backend.onrender.com";
+  
+useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
@@ -25,7 +26,8 @@ function DealerBidPage() {
       const updatedData = {};
       await Promise.all(storedCart.map(async (item) => {
         try {
-          const res = await fetch(`https://agrosetu-backend.onrender.com/api/auction/bids/${item._id}`);
+          // FIXED URL AND ROUTE
+          const res = await fetch(`${API_BASE}/api/auction/bids/${item._id}`);
           const data = await res.json();
           if (data.crop) updatedData[item._id] = { ...data.crop, bids: data.bids };
         } catch (err) { console.error("Fetch error:", err); }
@@ -52,16 +54,27 @@ function DealerBidPage() {
     if (amount <= highest) return alert(`Bid must be higher than ₹${highest}`);
 
     try {
-      const res = await fetch(`https://agrosetu-backend.onrender.com/api/auction/bid/${cropId}`, {
+      // FIXED URL AND ROUTE
+      const res = await fetch(`${API_BASE}/api/auction/bid/${cropId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dealerId, dealerName, pricePerKg: amount }),
+        body: JSON.stringify({ 
+          dealerId, 
+          dealerName: localStorage.getItem("name"), // Use "name" as per your signin logic
+          pricePerKg: amount}),
       });
+
+      const result = await res.json();
+
       if (res.ok) {
         setBidAmounts({ ...bidAmounts, [cropId]: "" });
         alert("Bid placed successfully!");
+      }else {
+        alert(result.message || "Bid failed");
       }
-    } catch (err) { alert("Bid failed"); }
+    } catch (err) { alert("Bid failed"); 
+      console.error("Bid error:", err);
+    }
   };
 
   const removeFromCart = (cropId) => {
@@ -122,7 +135,7 @@ function DealerBidPage() {
                 }}>
                   
                   <div style={{ height: "180px" }}>
-                    <img src={`http://localhost:5000${data.imageUrl}`} alt="" style={{ height: "100%", width: "100%", objectFit: "cover" }} />
+                    <img src={`${API_BASE}/${data.imageUrl}`} alt={data.cropName} style={{ height: "100%", width: "100%", objectFit: "cover" }} />
                   </div>
 
                   <div className="card-body p-4">

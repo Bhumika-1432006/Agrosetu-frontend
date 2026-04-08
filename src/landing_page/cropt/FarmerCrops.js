@@ -336,15 +336,19 @@ function FarmerCrops() {
                 <div style={{ position: "relative" }}>
                   // Line 166 (Inside the crops.map)
                   <img
-                    src={
-                      crop.imageUrl.startsWith("http")
-                        ? crop.imageUrl
-                        : `${process.env.REACT_APP_API_URL}/${crop.imageUrl.replace(/\\/g, "/")}`
-                    }
-                    className="card-img-top"
-                    alt={crop.cropName}
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
+  src={
+    crop.imageUrl && crop.imageUrl.startsWith("http")
+      ? crop.imageUrl // ✅ Use Cloudinary URL directly
+      : `${process.env.REACT_APP_API_URL || "http://localhost:5000"}/${crop.imageUrl?.replace(/\\/g, "/")}` // Fallback for old local data
+  }
+  className="card-img-top"
+  alt={crop.cropName}
+  style={{ height: "200px", objectFit: "cover" }}
+  onError={(e) => {
+    // This handles cases where the link is broken
+    e.target.src = "https://via.placeholder.com/300?text=Image+Not+Found";
+  }}
+/>
                   <span
                     style={{
                       position: "absolute",
