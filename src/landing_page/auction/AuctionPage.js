@@ -152,9 +152,10 @@ function AuctionPage() {
                         <span className="ms-2" style={{ color: "#999" }}>{index + 1}</span>
                     )}
                   </td>
-                  <td className="fw-bold" style={{ color: colors.textDark, fontSize: "1.1rem" }}>
-                    {bid.dealerName}
-                  </td>
+                 <td className="fw-bold" style={{ color: colors.textDark, fontSize: "1.1rem" }}>
+  {/* Check dealerName, then check userName, finally fallback to Anonymous */}
+  {bid.dealerName || bid.userName || "Anonymous Dealer"}
+</td>
                   <td className="fw-bold">
                     <span className="badge px-3 py-2" style={{ 
                         backgroundColor: index === 0 ? colors.primary : "#E9F0E8", 

@@ -78,7 +78,7 @@ function DealerBiddingRoom() {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/auction/bid/${cropId}`, {
+     const res = await fetch(`${API_BASE_URL}/api/bid/bid/${cropId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
