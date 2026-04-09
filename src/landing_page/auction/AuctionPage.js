@@ -153,10 +153,8 @@ function AuctionPage() {
                     )}
                   </td>
    <td className="fw-bold" style={{ color: colors.textDark, fontSize: "1.1rem" }}>
-  {/* Check if dealerName exists AND isn't literally the string "Anonymous" */}
-  {bid.dealerName && bid.dealerName !== "Anonymous" 
-    ? bid.dealerName 
-    : (bid.userName || "Verified Dealer")}
+  {/* Access the populated dealer name directly from the dealerId object */}
+  {bid.dealerId?.name || bid.dealerName || bid.userName || "Anonymous Dealer"}
 </td>
                   <td className="fw-bold">
                     <span className="badge px-3 py-2" style={{ 
