@@ -19,12 +19,13 @@ const [selectedArticle, setSelectedArticle] = useState(null);
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         
         const data = await res.json();
+        console.log("Articles received:", data.articles?.length); // Debug check
         
         if (data && data.articles) {
           const shuffled = data.articles
             .filter(art => art.title && art.title !== "[Removed]") 
             .sort(() => 0.5 - Math.random());
-          setNews(shuffled.slice(0, 6));
+          setNews(shuffled.slice(0, 8));
         }
       } catch (err) {
         console.error("Frontend fetch error:", err);
@@ -170,9 +171,10 @@ const [selectedArticle, setSelectedArticle] = useState(null);
           <div
             style={{
               display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fit, minmax(260px, 1fr))",
-              gap: "20px"
+              display: "grid",
+    // This allows 4 columns on large screens, 2 on tablets, and 1 on mobile
+    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", 
+    gap: "20px"
             }}
           >
             {news.map((item, index) => (
