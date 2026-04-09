@@ -12,7 +12,7 @@ const [selectedArticle, setSelectedArticle] = useState(null);
     const BASE_URL = process.env.REACT_APP_API_URL || "";
     const API_URL = `${BASE_URL}/api/news`;
    
-
+  console.log("Fetching from:", API_URL); // This will tell you if the ENV variable is working!
     async function fetchNews() {
       try {
         const res = await fetch(API_URL);
