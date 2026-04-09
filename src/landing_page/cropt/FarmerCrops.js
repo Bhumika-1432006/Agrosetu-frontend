@@ -116,44 +116,47 @@ function FarmerCrops() {
     }));
   };
 
-  const submitBidTime = async (cropId) => {
-    const times = bidTimes[cropId];
-    if (!times?.startTime || !times?.endTime) {
-      return alert("Select both start and end time");
-    }
+ const submitBidTime = async (cropId) => {
+  const times = bidTimes[cropId];
+  if (!times?.startTime || !times?.endTime) {
+    return alert("Select both start and end time");
+  }
 
-    // Use the Render URL from your .env file
-    const API_URL = process.env.REACT_APP_API_URL || "https://agrosetu-backend.onrender.com";
+  // FIX: Convert the local picker string to a standardized ISO format
+  const formattedStartTime = new Date(times.startTime).toISOString();
+  const formattedEndTime = new Date(times.endTime).toISOString();
 
-    try {
-      const res = await fetch(
-        `${API_URL}/api/auction/${cropId}/set-bid-time`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            farmerId,
-            startTime: times.startTime,
-            endTime: times.endTime,
-          }),
-        }
-      );
+  const API_URL = process.env.REACT_APP_API_URL || "https://agrosetu-backend.onrender.com";
 
-      const data = await res.json();
-
-      if (res.ok) {
-        alert(data.message); // Will show "Auction is now LIVE!" or "Auction Scheduled"
-        setCrops((prev) =>
-          prev.map((c) => (c._id === cropId ? { ...c, ...data.crop } : c)),
-        );
-      } else {
-        alert(data.message);
+  try {
+    const res = await fetch(
+      `${API_URL}/api/auction/${cropId}/set-bid-time`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          farmerId,
+          startTime: formattedStartTime, // Send standardized time
+          endTime: formattedEndTime,     // Send standardized time
+        }),
       }
-    } catch (err) {
-      console.error(err);
-      alert("Server error updating auction time");
+    );
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert(data.message);
+      setCrops((prev) =>
+        prev.map((c) => (c._id === cropId ? { ...c, ...data.crop } : c)),
+      );
+    } else {
+      alert(data.message);
     }
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Server error updating auction time");
+  }
+};
 
   if (loading)
     return (
