@@ -78,12 +78,13 @@ function DealerBiddingRoom() {
     }
 
     try {
-     const res = await fetch(`${API_BASE_URL}/api/bid/bid/${cropId}`, {
+     // Line 78 in your NEW code should be:
+const res = await fetch(`${API_BASE_URL}/api/bid/bid/${cropId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           dealerId: localStorage.getItem("userId"), 
-          dealerName: localStorage.getItem("name") || "Anonymous Dealer", 
+          dealerName: localStorage.getItem("username") || localStorage.getItem("name") || "Anonymous Dealer",
           pricePerKg: bidAmount 
         }),
       });
