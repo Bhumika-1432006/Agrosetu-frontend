@@ -46,12 +46,13 @@ function DealerBiddingRoom() {
     socket.emit("joinAuction", cropId);
 
     // LISTEN FOR THE CORRECT EVENT NAME: "newBid" (matches backend)
-    socket.on("newBid", (update) => {
-      if (update.cropId === cropId) {
-        const sorted = (update.bids || []).sort((a, b) => b.pricePerKg - a.pricePerKg);
-        setBids(sorted);
-      }
-    });
+   socket.on("newBid", (update) => {
+  console.log("Socket received new data:", update); // Check if dealerName is here!
+  if (update.cropId === cropId) {
+    const sorted = (update.bids || []).sort((a, b) => b.pricePerKg - a.pricePerKg);
+    setBids(sorted);
+  }
+});
 
     // LISTEN FOR TIME UPDATES
     socket.on("bidTimeUpdated", (update) => {
