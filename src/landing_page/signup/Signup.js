@@ -70,14 +70,14 @@ function Signup() {
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    // UPDATED TO USE ENV VARIABLE
-   const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+  e.preventDefault();
+  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
   const endpoint = isSignup ? "/api/signup" : "/api/signin";
   const url = `${baseUrl}${endpoint}`;
-    let bodyData = isSignup
-      ? { name: formData.name, email: formData.email, password: formData.password, role }
-      : { email: formData.email, password: formData.password };
+
+  let bodyData = isSignup
+    ? { name: formData.name, email: formData.email, password: formData.password, role }
+    : { email: formData.email, password: formData.password };
     if (isSignup) {
       if (role === "farmer") {
         bodyData.farmSize = formData.farmSize;
@@ -90,24 +90,36 @@ function Signup() {
       }
     }
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyData),
-      });
-      const result = await res.json();
-      setMessage(result.message);
-      if (!isSignup && res.status === 200) {
-        localStorage.setItem("username", result.name);
-        localStorage.setItem("role", result.role);
-        localStorage.setItem("userId", result.userId);
-        result.role === "farmer" ? navigate("/farmer/crops") : navigate("/dealer/crops");
-      }
-    } catch (err) {
-      console.error(err);
-      setMessage("Something went wrong!");
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(bodyData),
+    });
+    
+    const result = await res.json();
+    setMessage(result.message);
+
+    if (res.status === 200 || res.status === 201) {
+      // 1. Determine the name: 
+      // If logging in, use backend result. If signing up, use the form data directly.
+      const displayName = result.name || formData.name;
+
+      // 2. Save everything to localStorage
+      localStorage.setItem("username", displayName);
+      localStorage.setItem("role", result.role || role);
+      localStorage.setItem("userId", result.userId || result._id);
+
+      console.log("Session Started for:", displayName);
+
+      // 3. Navigate based on role
+      const targetRole = result.role || role;
+      targetRole === "farmer" ? navigate("/farmer/crops") : navigate("/dealer/crops");
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setMessage("Something went wrong!");
+  }
+};
 
   return (
     <div style={{ 
