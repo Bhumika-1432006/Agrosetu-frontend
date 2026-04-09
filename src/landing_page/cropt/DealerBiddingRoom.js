@@ -76,7 +76,10 @@ function DealerBiddingRoom() {
 
   // 1. RE-FETCH FRESH FROM STORAGE INSIDE THE FUNCTION
   // Do not rely on any variables defined outside this function
-  const currentUsername = localStorage.getItem("username"); 
+// 1. RE-FETCH FRESH FROM STORAGE INSIDE THE FUNCTION
+// Use "name" because that is what you set in your Signin.js
+const currentUsername = localStorage.getItem("name"); 
+
   const currentUserId = localStorage.getItem("userId");
 
   // 2. Add this Alert to debug - it will pop up on your screen

@@ -105,7 +105,7 @@ function Signup() {
       const displayName = result.name || formData.name;
 
       // 2. Save everything to localStorage
-      localStorage.setItem("username", displayName);
+      localStorage.setItem("name", displayName);
       localStorage.setItem("role", result.role || role);
       localStorage.setItem("userId", result.userId || result._id);
 
