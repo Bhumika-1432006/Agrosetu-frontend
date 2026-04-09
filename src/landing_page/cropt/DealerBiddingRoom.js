@@ -70,36 +70,47 @@ function DealerBiddingRoom() {
   const highestBid = bids.length > 0 ? bids[0].pricePerKg : (parseFloat(crop?.price) || 0);
 
   const submitBid = async () => {
-    if (!crop) return;
-    const bidAmount = parseFloat(newBid);
+  if (!crop) return;
+  const bidAmount = parseFloat(newBid);
 
-    if (!bidAmount || bidAmount <= highestBid) {
-      return alert(`Your bid must be HIGHER than ₹${highestBid}`);
+  // 1. Explicitly grab the values
+  const storedName = localStorage.getItem("username");
+  const storedId = localStorage.getItem("userId");
+
+  // 2. Validation: Alert if the session is broken
+  if (!storedName || !storedId) {
+    console.error("Missing Auth Data:", { storedName, storedId });
+    return alert("Session Error: Please Log Out and Log In again to refresh your name.");
+  }
+
+  if (!bidAmount || bidAmount <= highestBid) {
+    return alert(`Your bid must be HIGHER than ₹${highestBid}`);
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/bid/bid/${cropId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        dealerId: storedId, 
+        dealerName: storedName, // Use the variable we just checked
+        pricePerKg: bidAmount 
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setNewBid("");
+      // Success will be reflected via Socket.io automatically
+    } else {
+      alert(data.message || "Bid failed");
     }
-
-    try {
-     // Line 78 in your NEW code should be:
-const res = await fetch(`${API_BASE_URL}/api/bid/bid/${cropId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          dealerId: localStorage.getItem("userId"), 
-          dealerName: localStorage.getItem("username") || localStorage.getItem("name") || "Anonymous Dealer",
-          pricePerKg: bidAmount 
-        }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setNewBid("");
-      } else {
-        alert(data.message || "Bid failed");
-      }
-    } catch (err) { 
-      alert("Server error. Please check your connection."); 
-    }
-  };
+  } catch (err) { 
+    console.error("Fetch Error:", err);
+    alert("Server error. Please check your connection."); 
+  }
+};
 
   if (loading) return <div className="text-center mt-5">Loading Auction Room...</div>;
   if (!crop) return <div className="container mt-5 text-center"><h4>Auction not found.</h4></div>;
