@@ -74,14 +74,17 @@ function DealerBiddingRoom() {
   if (!crop) return;
   const bidAmount = parseFloat(newBid);
 
-  // 1. Explicitly grab the values
-  const storedName = localStorage.getItem("username");
-  const storedId = localStorage.getItem("userId");
+  // 1. RE-FETCH FRESH FROM STORAGE INSIDE THE FUNCTION
+  // Do not rely on any variables defined outside this function
+  const currentUsername = localStorage.getItem("username"); 
+  const currentUserId = localStorage.getItem("userId");
 
-  // 2. Validation: Alert if the session is broken
-  if (!storedName || !storedId) {
-    console.error("Missing Auth Data:", { storedName, storedId });
-    return alert("Session Error: Please Log Out and Log In again to refresh your name.");
+  // 2. Add this Alert to debug - it will pop up on your screen
+  // If this alert says "Current User: null", we found the problem!
+  // alert(`Checking Storage: ${currentUsername}`); 
+
+  if (!currentUsername || currentUsername === "undefined") {
+    return alert("Error: Your name is missing. Please log out and log in again.");
   }
 
   if (!bidAmount || bidAmount <= highestBid) {
@@ -93,23 +96,20 @@ function DealerBiddingRoom() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 
-        dealerId: storedId, 
-        dealerName: storedName, // Use the variable we just checked
+        dealerId: currentUserId, 
+        dealerName: currentUsername, // Use the fresh variable here
         pricePerKg: bidAmount 
       }),
     });
 
     const data = await res.json();
-
     if (res.ok) {
       setNewBid("");
-      // Success will be reflected via Socket.io automatically
-    } else {
-      alert(data.message || "Bid failed");
+      // The socket logic we added to the backend will now 
+      // broadcast "sara" to the leaderboard!
     }
   } catch (err) { 
     console.error("Fetch Error:", err);
-    alert("Server error. Please check your connection."); 
   }
 };
 
