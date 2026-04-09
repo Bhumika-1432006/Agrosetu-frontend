@@ -8,24 +8,31 @@ const [error, setError] = useState("");
 const [selectedArticle, setSelectedArticle] = useState(null);
 
   useEffect(() => {
-    const API_KEY = "ad6289a097f94ee8a75aeaecfb244ed5";
-    const API_URL = `https://newsapi.org/v2/everything?q=agriculture OR farming OR crops OR horticulture&sortBy=publishedAt&pageSize=6&language=en&apiKey=${API_KEY}`;
+    // Falls back to empty string if env is missing to avoid undefined in URL
+    const BASE_URL = process.env.REACT_APP_API_URL || "";
+    const API_URL = `${BASE_URL}/api/news`;
+   
 
     async function fetchNews() {
       try {
         const res = await fetch(API_URL);
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        
         const data = await res.json();
-        const shuffled = data.articles.sort(() => 0.5 - Math.random());
-        setNews(shuffled.slice(0, 6));
+        
+        if (data && data.articles) {
+          const shuffled = data.articles
+            .filter(art => art.title && art.title !== "[Removed]") 
+            .sort(() => 0.5 - Math.random());
+          setNews(shuffled.slice(0, 6));
+        }
       } catch (err) {
-        console.error(err);
-        setError("Could not load news. Please try again later.");
+        console.error("Frontend fetch error:", err);
+        setError("Agri News Stream is currently unavailable.");
       }
     }
     fetchNews();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
+  }, []);
   const colors = {
     primary: "#4B6F44",
     accent: "#8FBC8F",
