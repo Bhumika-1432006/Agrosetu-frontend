@@ -149,14 +149,23 @@ function DealerCrops() {
                   {crop.imageUrl ? (
                     // Line 104 (Inside the crops.map)
                     <img
-                      src={`${process.env.REACT_APP_API_URL}${crop.imageUrl}`}
-                      alt={crop.cropName}
-                      style={{
-                        height: "300px",
-                        width: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
+      src={
+        crop.imageUrl.startsWith("http") 
+          ? crop.imageUrl 
+          : `${process.env.REACT_APP_API_URL}${crop.imageUrl.startsWith("/") ? "" : "/"}${crop.imageUrl}`
+      }
+      alt={crop.cropName}
+      style={{
+        height: "300px",
+        width: "100%",
+        objectFit: "cover",
+      }}
+      // Fallback if the server is up but the specific image file is missing
+      onError={(e) => {
+        e.target.onerror = null; 
+        e.target.src = "https://via.placeholder.com/300?text=Image+Not+Found";
+      }}
+    />
                   ) : (
                     <div
                       style={{
