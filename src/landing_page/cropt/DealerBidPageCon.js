@@ -135,7 +135,19 @@ useEffect(() => {
                 }}>
                   
                   <div style={{ height: "180px" }}>
-                    <img src={`${API_BASE}/${data.imageUrl}`} alt={data.cropName} style={{ height: "100%", width: "100%", objectFit: "cover" }} />
+                    <img 
+  src={
+    data.imageUrl?.startsWith("http") 
+      ? data.imageUrl 
+      : `${API_BASE}${data.imageUrl?.startsWith("/") ? "" : "/"}${data.imageUrl}`
+  } 
+  alt={data.cropName} 
+  style={{ height: "100%", width: "100%", objectFit: "cover" }} 
+  onError={(e) => {
+    e.target.onerror = null; 
+    e.target.src = "https://via.placeholder.com/180?text=Harvest+Image";
+  }}
+/>
                   </div>
 
                   <div className="card-body p-4">
