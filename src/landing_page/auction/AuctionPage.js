@@ -76,11 +76,18 @@ function AuctionPage() {
     <div style={{ backgroundColor: colors.bgLight, minHeight: "100vh", paddingBottom: "60px" }}>
       <div style={{ position: "relative", height: "350px", width: "100%", overflow: "hidden" }}>
         <img 
-          // UPDATED TO USE ENV VARIABLE
-          src={`${process.env.REACT_APP_API_URL}${crop.imageUrl}`} 
-          alt={crop.cropName} 
-          style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.6)" }} 
-        />
+  src={
+    crop.imageUrl?.startsWith("http") 
+      ? crop.imageUrl 
+      : `${process.env.REACT_APP_API_URL}${crop.imageUrl?.startsWith("/") ? "" : "/"}${crop.imageUrl}`
+  } 
+  alt={crop.cropName} 
+  style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.6)" }} 
+  onError={(e) => {
+    e.target.onerror = null; 
+    e.target.src = "https://via.placeholder.com/1200x400?text=Auction+Live";
+  }}
+/>
         <div className="container" style={{ 
             position: "absolute", bottom: "40px", left: "50%", transform: "translateX(-50%)", color: "white" 
         }}>
