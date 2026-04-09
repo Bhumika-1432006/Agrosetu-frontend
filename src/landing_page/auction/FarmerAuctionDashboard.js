@@ -73,12 +73,20 @@ function FarmerAuctionDashboard() {
             myCrops.map((crop) => (
               <div key={crop._id} className="col-md-4">
                 <div className="card h-100 border-0 shadow-sm" style={{ borderRadius: "20px" }}>
-                  <img 
-                    src={crop.imageUrl ? `${API_BASE_URL}${crop.imageUrl}` : "https://via.placeholder.com/200"} 
-                    className="card-img-top" 
-                    style={{ height: "200px", objectFit: "cover", borderRadius: "20px 20px 0 0" }} 
-                    alt={crop.cropName} 
-                  />
+                 <img 
+  src={
+    crop.imageUrl?.startsWith("http") 
+      ? crop.imageUrl 
+      : `${API_BASE_URL}${crop.imageUrl?.startsWith("/") ? "" : "/"}${crop.imageUrl}`
+  } 
+  className="card-img-top" 
+  style={{ height: "200px", objectFit: "cover", borderRadius: "20px 20px 0 0" }} 
+  alt={crop.cropName} 
+  onError={(e) => {
+    e.target.onerror = null; 
+    e.target.src = "https://via.placeholder.com/400x200?text=Crop+Image";
+  }}
+/>
                   <div className="card-body">
                     <h5 className="fw-bold">{crop.cropName}</h5>
                     <p className="text-muted small">Status: <span className="badge bg-success">{crop.status}</span></p>
