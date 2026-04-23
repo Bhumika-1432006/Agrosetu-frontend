@@ -21,19 +21,17 @@ function FarmerChatPage() {
 
   // 1. FIXED: URL logic to use Environment Variable
   const fetchChat = async () => {
-    if (!state?.chatId) return;
-    try {
-      // Priority: 1. Env Variable, 2. Manual Fallback
-      const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
-      
-      const res = await fetch(`${API_BASE}/api/chat/${state.chatId}`);
-      const data = await res.json();
-      setChat(data);
-    } catch (err) {
-      console.error("Failed to fetch chat:", err);
-    }
-  };
-
+  if (!chatId) return; // Use the chatId from params
+  try {
+    // The fallback ensures that even if .env is missing, it points to your Render URL
+    const API_BASE = process.env.REACT_APP_API_URL || "https://agrosetu-backend.onrender.com";
+    const res = await fetch(`${API_BASE}/api/chat/${chatId}`);
+    const data = await res.json();
+    setChat(data);
+  } catch (err) {
+    console.error("Failed to fetch chat:", err);
+  }
+};
   useEffect(() => {
     fetchChat();
     const interval = setInterval(fetchChat, 2000);
@@ -45,30 +43,27 @@ function FarmerChatPage() {
   }, [chat]);
 
   // 2. FIXED: Variable 'text' and Dynamic URL
-  const sendMessage = async () => {
-    if (!text.trim()) return;
-    try {
-      const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
-      const res = await fetch(`${API_BASE}/api/chat/${state.chatId}/message`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chatId: state.chatId,
-          senderRole: "farmer",
-          text: text // Fixed: Matches your state variable 'text'
-        }),
-      });
-
-      if (!res.ok) throw new Error("Failed to send message");
-      
-      const updatedChat = await res.json();
-      setChat(updatedChat);
-      setText(""); 
-    } catch (err) {
-      console.error(err);
-      alert("Failed to send message");
-    }
-  };
+ const sendMessage = async () => {
+  if (!text.trim()) return;
+  try {
+    const API_BASE = process.env.REACT_APP_API_URL || "https://agrosetu-backend.onrender.com";
+    const res = await fetch(`${API_BASE}/api/chat/${chatId}/message`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        senderRole: "farmer",
+        text: text 
+      }),
+    });
+    if (!res.ok) throw new Error("Failed to send message");
+    const updatedChat = await res.json();
+    setChat(updatedChat);
+    setText(""); 
+  } catch (err) {
+    console.error(err);
+    alert("Failed to send message");
+  }
+};
 
   if (!chat) return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: colors.bgLight }}>

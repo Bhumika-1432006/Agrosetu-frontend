@@ -31,28 +31,23 @@ function FarmerInterests() {
   }, [farmerId]);
 
   const startChat = async (dealerId, cropId) => {
-    try {
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+  try {
+    const API_BASE = process.env.REACT_APP_API_URL || "https://agrosetu-backend.onrender.com";
+    const res = await fetch(`${API_BASE}/api/chat/start`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dealerId, farmerId, cropId }),
+    });
 
+    const chat = await res.json();
+    if (!res.ok) return;
 
-     const res = await fetch(`${API_URL}/api/chat/start`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dealerId, farmerId, cropId }),
-      });
-
-      const chat = await res.json();
-
-      if (!res.ok) {
-        console.error("Start chat failed:", chat.message);
-        return;
-      }
-
-      navigate(`/farmer/chat/${chat._id}`, { state: { chatId: chat._id } });
-    } catch (err) {
-      console.error("Start chat error:", err);
-    }
-  };
+    // Navigate using the ID directly in the URL
+    navigate(`/farmer/chat/${chat._id}`);
+  } catch (err) {
+    console.error("Start chat error:", err);
+  }
+};
 
   return (
     <div style={{ backgroundColor: colors.bgLight, minHeight: "100vh", padding: "40px 20px" }}>
