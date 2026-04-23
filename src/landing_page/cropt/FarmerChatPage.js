@@ -27,7 +27,7 @@ function FarmerChatPage() {
 
   const fetchChat = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/chat/${chatId}`);
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}`);
       if (!res.ok) throw new Error("Failed to fetch chat");
       const data = await res.json();
       setChat(data);
@@ -51,12 +51,11 @@ function FarmerChatPage() {
     if (!newMessage.trim()) return;
 
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/chat/${chatId}/message`,
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}/message`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ senderRole, text: newMessage }),
+          body: JSON.stringify({ senderRole, text: text }),
         }
       );
 

@@ -25,7 +25,7 @@ function ChatPage() {
     if (!state?.chatId) return;
     try {
       // UPDATED TO USE ENV VARIABLE
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}`);
+      const res = await fetch(`${API_BASE_URL}/api/chat/${state.chatId}`);
       if (!res.ok) throw new Error("Failed to fetch chat");
       const data = await res.json();
       setChat(data);
@@ -50,7 +50,7 @@ function ChatPage() {
     try {
       // UPDATED TO USE ENV VARIABLE
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}/message`,
+        `${API_BASE_URL}/api/chat/${state.chatId}/message`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
