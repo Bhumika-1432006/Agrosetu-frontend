@@ -32,7 +32,10 @@ function FarmerInterests() {
 
   const startChat = async (dealerId, cropId) => {
     try {
-      const res = await fetch("http://localhost:5000/api/chat/start", {
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
+
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/start`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dealerId, farmerId, cropId }),
