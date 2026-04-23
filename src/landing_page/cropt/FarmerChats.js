@@ -23,7 +23,9 @@ function FarmerChatPage() {
   const fetchChat = async () => {
     if (!state?.chatId) return;
     try {
+      // Priority: 1. Env Variable, 2. Manual Fallback
       const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      
       const res = await fetch(`${API_BASE}/api/chat/${state.chatId}`);
       const data = await res.json();
       setChat(data);
