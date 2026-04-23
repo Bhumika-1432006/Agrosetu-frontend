@@ -45,19 +45,22 @@ function FarmerChatPage() {
   const sendMessage = async () => {
     if (!text.trim()) return;
     try {
-      const res = await fetch("http://localhost:5000/api/chat/message", {
+      // 1. Use dynamic API URL
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}/message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           chatId: state.chatId,
           senderRole: "farmer",
-          text,
+          text: text // 2. Fixed: Use 'text' (the state variable), not 'newMessage'
         }),
       });
+
       if (!res.ok) throw new Error("Failed to send message");
+      
       const updatedChat = await res.json();
       setChat(updatedChat);
-      setText("");
+      setText(""); // Clear input after sending
     } catch (err) {
       console.error(err);
       alert("Failed to send message");
