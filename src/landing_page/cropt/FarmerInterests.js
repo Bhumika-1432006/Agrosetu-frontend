@@ -48,7 +48,7 @@ const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
         return;
       }
 
-      navigate(`/farmer/chat/${chat._id}`);
+      navigate(`/farmer/chat/${chat._id}`, { state: { chatId: chat._id } });
     } catch (err) {
       console.error("Start chat error:", err);
     }
