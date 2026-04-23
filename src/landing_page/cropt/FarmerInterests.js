@@ -32,25 +32,31 @@ function FarmerInterests() {
 
   const startChat = async (dealerId, cropId) => {
     try {
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      // 1. Unified API URL logic
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
-
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/start`, {
+      const res = await fetch(`${API_URL}/api/chat/start`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dealerId, farmerId, cropId }),
+        // Ensure farmerId exists
+        body: JSON.stringify({ dealerId, farmerId: farmerId || localStorage.getItem("userId"), cropId }),
       });
 
       const chat = await res.json();
 
       if (!res.ok) {
         console.error("Start chat failed:", chat.message);
+        alert("Failed to join chat: " + (chat.message || "Unknown error"));
         return;
       }
 
-      navigate(`/farmer/chat/${chat._id}`, { state: { chatId: chat._id } });
+      // 2. Navigate with state for the FarmerChatPage
+      if (chat && chat._id) {
+        navigate(`/farmer/chat/${chat._id}`, { state: { chatId: chat._id } });
+      }
     } catch (err) {
       console.error("Start chat error:", err);
+      alert("Connection refused. Check if your backend is running at: " + (process.env.REACT_APP_API_URL || "localhost:5000"));
     }
   };
 
