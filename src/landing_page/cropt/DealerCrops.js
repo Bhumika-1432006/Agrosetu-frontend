@@ -60,7 +60,7 @@ function DealerCrops() {
     try {
       const farmerId = crop.farmerId._id || crop.farmerId;
 
-      const res = await fetch("http://localhost:5000/api/chat/start", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/start`,  {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
