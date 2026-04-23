@@ -65,7 +65,7 @@ function DealerCrops() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           dealerId,
-          farmerId,
+         farmerId: farmerId,
           cropId: crop._id,
         }),
       });

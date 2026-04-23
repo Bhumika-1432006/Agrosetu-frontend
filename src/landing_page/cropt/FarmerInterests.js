@@ -19,7 +19,7 @@ function FarmerInterests() {
   useEffect(() => {
     const fetchInterests = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/chat/farmer/${farmerId}`);
+       const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/farmer/${farmerId}`);
         const data = await res.json();
         setInterests(data);
       } catch (err) {

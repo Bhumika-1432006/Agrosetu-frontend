@@ -9,7 +9,7 @@ function Homepage() {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    const storedName = localStorage.getItem("username");
+    const storedName = localStorage.getItem("name");
     if (storedName) setUsername(storedName);
   }, []);
 
