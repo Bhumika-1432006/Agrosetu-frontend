@@ -23,7 +23,7 @@ function FarmerChatPage() {
   const fetchChat = async () => {
     if (!state?.chatId) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/chat/${state.chatId}`);
+     const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}`);
       const data = await res.json();
       setChat(data);
     } catch (err) {
@@ -46,7 +46,7 @@ function FarmerChatPage() {
     if (!text.trim()) return;
     try {
       // 1. Use dynamic API URL
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}/message`, {
+   const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}/message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
