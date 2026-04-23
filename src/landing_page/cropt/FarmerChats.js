@@ -19,11 +19,12 @@ function FarmerChatPage() {
     border: "#E2E8E1"
   };
 
-  // Fetch chat messages (LOGIC UNTOUCHED)
+  // 1. FIXED: URL logic to use Environment Variable
   const fetchChat = async () => {
     if (!state?.chatId) return;
     try {
-     const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}`);
+      const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const res = await fetch(`${API_BASE}/api/chat/${state.chatId}`);
       const data = await res.json();
       setChat(data);
     } catch (err) {
@@ -41,18 +42,18 @@ function FarmerChatPage() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
 
-  // Send a message (LOGIC UNTOUCHED)
+  // 2. FIXED: Variable 'text' and Dynamic URL
   const sendMessage = async () => {
     if (!text.trim()) return;
     try {
-      // 1. Use dynamic API URL
-   const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}/message`, {
+      const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const res = await fetch(`${API_BASE}/api/chat/${state.chatId}/message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           chatId: state.chatId,
           senderRole: "farmer",
-          text: text // 2. Fixed: Use 'text' (the state variable), not 'newMessage'
+          text: text // Fixed: Matches your state variable 'text'
         }),
       });
 
@@ -60,7 +61,7 @@ function FarmerChatPage() {
       
       const updatedChat = await res.json();
       setChat(updatedChat);
-      setText(""); // Clear input after sending
+      setText(""); 
     } catch (err) {
       console.error(err);
       alert("Failed to send message");
@@ -139,13 +140,13 @@ function FarmerChatPage() {
               }}
             >
               <div style={{
-                padding: "16px 24px", // Slightly more padding for bigger text
+                padding: "16px 24px", 
                 borderRadius: m.senderRole === "farmer" ? "24px 24px 4px 24px" : "24px 24px 24px 4px",
                 background: m.senderRole === "farmer" ? colors.bubbleFarmer : colors.bubbleDealer,
                 color: m.senderRole === "farmer" ? colors.white : colors.textDark,
                 boxShadow: m.senderRole === "farmer" ? "0 4px 12px rgba(75, 111, 68, 0.2)" : "0 4px 12px rgba(0,0,0,0.03)",
                 border: m.senderRole === "farmer" ? "none" : `1px solid ${colors.border}`,
-                fontSize: "1.15rem", // INCREASED SIZE
+                fontSize: "1.15rem",
                 lineHeight: "1.5",
                 fontWeight: "400"
               }}>
@@ -174,8 +175,8 @@ function FarmerChatPage() {
               style={{
                 borderRadius: "16px",
                 border: `1.5px solid ${colors.border}`,
-                padding: "18px 22px", // Increased padding for comfort
-                fontSize: "1.1rem", // INCREASED SIZE
+                padding: "18px 22px",
+                fontSize: "1.1rem",
                 flex: 1,
                 backgroundColor: "#F9FAF9",
                 outline: "none",
