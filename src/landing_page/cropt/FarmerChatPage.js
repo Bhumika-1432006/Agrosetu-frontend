@@ -27,7 +27,7 @@ function FarmerChatPage() {
 
   const fetchChat = async () => {
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}`);
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${chatId}`);
       if (!res.ok) throw new Error("Failed to fetch chat");
       const data = await res.json();
       setChat(data);
@@ -42,8 +42,12 @@ function FarmerChatPage() {
     return () => clearInterval(interval);
   }, [chatId]);
 
+  // useEffect(() => {
+  //   scrollToBottom();
+  // }, [chat]);
+
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
 
   const handleSend = async (e) => {
@@ -51,11 +55,13 @@ function FarmerChatPage() {
     if (!newMessage.trim()) return;
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${state.chatId}/message`,
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${chatId}/message`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ senderRole, text: text }),
+          body: JSON.stringify({
+             senderRole: senderRole, 
+             text: newMessage }),
         }
       );
 
@@ -67,6 +73,7 @@ function FarmerChatPage() {
       scrollToBottom();
     } catch (err) {
       console.error("Send message error:", err);
+      alert("Message failed to send");
     }
   };
 

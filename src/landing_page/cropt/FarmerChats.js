@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 function FarmerChatPage() {
   const { state } = useLocation(); // { chatId }
+  const { chatId } = useParams();
   const [chat, setChat] = useState(null);
   const [text, setText] = useState("");
   const chatEndRef = useRef(null);
@@ -26,6 +28,8 @@ function FarmerChatPage() {
     // The fallback ensures that even if .env is missing, it points to your Render URL
     const API_BASE = process.env.REACT_APP_API_URL || "https://agrosetu-backend.onrender.com";
     const res = await fetch(`${API_BASE}/api/chat/${chatId}`);
+    if (!res.ok) throw new Error("Failed to fetch");
+
     const data = await res.json();
     setChat(data);
   } catch (err) {
@@ -36,7 +40,7 @@ function FarmerChatPage() {
     fetchChat();
     const interval = setInterval(fetchChat, 2000);
     return () => clearInterval(interval);
-  }, [state?.chatId]);
+  }, [chatId]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
