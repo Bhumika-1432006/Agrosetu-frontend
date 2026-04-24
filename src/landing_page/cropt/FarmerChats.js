@@ -22,18 +22,19 @@ function FarmerChatPage() {
   };
 
   // 1. FIXED: URL logic to use Environment Variable
-  const fetchChat = async () => {
-  if (!chatId) return; // Use the chatId from params
+ const fetchChat = async () => {
+  if (!chatId) return; 
   try {
-    // The fallback ensures that even if .env is missing, it points to your Render URL
+    // Ensure you use the ENV variable or the fallback Render URL
     const API_BASE = process.env.REACT_APP_API_URL || "https://agrosetu-backend.onrender.com";
     const res = await fetch(`${API_BASE}/api/chat/${chatId}`);
-    if (!res.ok) throw new Error("Failed to fetch");
-
+    
+    if (!res.ok) throw new Error("Failed to fetch chat");
+    
     const data = await res.json();
     setChat(data);
   } catch (err) {
-    console.error("Failed to fetch chat:", err);
+    console.error("Fetch chat error:", err);
   }
 };
   useEffect(() => {
