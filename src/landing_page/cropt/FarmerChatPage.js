@@ -55,27 +55,28 @@ function FarmerChatPage() {
     if (!newMessage.trim()) return;
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${chatId}/message`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-             senderRole: senderRole, 
-             text: newMessage }),
-        }
-      );
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat/${chatId}/message`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ senderRole: senderRole, text: newMessage }),
+        });
 
-      if (!res.ok) throw new Error("Failed to send message");
+        if (!res.ok) throw new Error("Failed to send message");
 
-      const updatedChat = await res.json();
-      setChat(updatedChat);
-      setNewMessage(""); 
-      scrollToBottom();
+        const updatedChat = await res.json();
+        setChat(updatedChat);
+        setNewMessage(""); 
+        
+        // Force scroll to bottom immediately after sending
+        setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 100); 
+
     } catch (err) {
-      console.error("Send message error:", err);
-      alert("Message failed to send");
+        console.error("Send message error:", err);
+        alert("Message failed to send");
     }
-  };
+};
 
   if (!chat) return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: colors.bgLight }}>
